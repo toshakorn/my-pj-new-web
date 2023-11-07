@@ -85,7 +85,7 @@ const AddMember = (props: Props) => {
               <div>
                 <p className="text-[35px]">เลขบัตรประจำตัวประชาชน</p>
                 <input
-                  type="text"
+                  type="number"
                   className="border-2 border-black text-[25px]"
                   value={idCard}
                   onChange={(e) => setIdCard(e.target.value)}
