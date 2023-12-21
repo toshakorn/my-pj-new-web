@@ -79,6 +79,16 @@ const Sidebar = (props: Props) => {
                   เพิ่มสมาชิก
                 </Link>
               </li>
+              <li>
+                <Link
+                  className={`text-[25px] ${
+                    pathname === "/listhistory" ? "underline" : ""
+                  }`}
+                  href={"listhistory"}
+                >
+                  รายการที่ยืม
+                </Link>
+              </li>
             </ul>
             <div className="absolute bottom-4">
               <button onClick={logout} className="bg-[#F25E5E] w-[159px] h-[33px]">

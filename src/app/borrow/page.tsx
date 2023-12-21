@@ -3,7 +3,7 @@ import { Modal } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 type Props = {};
 type Book = {
@@ -32,6 +32,7 @@ const Borrow = (props: Props) => {
   const [listBook, setListBook] = useState<Book[]>([]);
   const [addBorrow, setAddBorrow] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [searchTextBook, setSearchTextBook] = useState("");
   const [searchResults, setSearchResults] = useState<any>([]);
   const [days, setDays] = useState(0);
 
@@ -42,8 +43,8 @@ const Borrow = (props: Props) => {
 
   const onSubmit = () => {
     const currentDate = new Date();
-    const day = currentDate.getDate().toString().padStart(2, '0');
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = currentDate.getDate().toString().padStart(2, "0");
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
     const year = currentDate.getFullYear().toString().slice(-2);
     const formattedDate = `${day}/${month}/${year}`;
     const data = {
@@ -54,35 +55,38 @@ const Borrow = (props: Props) => {
       dateNow: formattedDate,
       dateNowCheck: Date.now(),
     };
-  
+
     console.log(data);
-  
+
     // ทำการ POST ข้อมูลไปที่ URL http://localhost:8081/borrow
-    axios.post('http://localhost:8081/borrow', data)
-      .then(response => {
-        console.log('POST สำเร็จ', response);
+    axios
+      .post("http://localhost:8081/borrow", data)
+      .then((response) => {
+        console.log("POST สำเร็จ", response);
         Swal.fire({
-          icon: 'success',
-          title: 'สำเร็จ',
-          text: 'บันทึกข้อมูลเสร็จสิ้น',
+          icon: "success",
+          title: "สำเร็จ",
+          text: "บันทึกข้อมูลเสร็จสิ้น",
         });
         setSearchResults("");
-        setListBook([]),
-        setDays(0);
+        setListBook([]), setDays(0);
+        // รอเวลา 1.5 วินาที (1500 มิลลิวินาที) ก่อนที่จะเปลี่ยนที่อยู่ URL
+        setTimeout(function () {
+          window.location.href = "/listreturn";
+        }, 1500);
+
         // ทำอะไรก็ตามที่คุณต้องการหลังจาก POST สำเร็จ
       })
-      .catch(error => {
-        console.error('เกิดข้อผิดพลาดในการ ยืม', error);
+      .catch((error) => {
+        console.error("เกิดข้อผิดพลาดในการ ยืม", error);
         Swal.fire({
-          icon: 'error',
-          title: 'เกิดข้อผิดพลาดในการ ยืม',
-          text: 'ไม่สามารถส่งข้อมูลไปยังเซิร์ฟเวอร์ได้',
+          icon: "error",
+          title: "เกิดข้อผิดพลาดในการ ยืม",
+          text: "ไม่สามารถส่งข้อมูลไปยังเซิร์ฟเวอร์ได้",
         });
         // ทำอะไรก็ตามที่คุณต้องการหลังจากเกิดข้อผิดพลาดในการ POST
       });
   };
-
-  
 
   const showEditModal = (book: any) => {
     setAddBorrow(true);
@@ -127,6 +131,21 @@ const Borrow = (props: Props) => {
     }
   };
 
+  console.log(books);
+
+  const handleSearchBook = () => {
+    // ค้นหาหนังสือที่ตรงกับ searchTextBook ใน books[].name
+    const searchResult = books.filter((book) =>
+      book.name.includes(searchTextBook)
+    );
+    // เปลี่ยนค่า books เป็นรายการที่ค้นหาได้
+    setBooks(searchResult);
+
+    if (searchTextBook == "") {
+      fleshData();
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-center w-full">
@@ -137,10 +156,14 @@ const Borrow = (props: Props) => {
           <div className="mt-[50px] ml-4 flex items-center">
             <input
               className="text-[25px] w-[250px] rounded-[8px] border-2 border-black"
-              placeholder="ค้นหาจากรหัสหนังสือ"
+              placeholder="ค้นหาจากชื่อหนังสือ"
               type="text"
+              onChange={(e) => setSearchTextBook(e.target.value)}
             />
-            <button className="bg-[#35BF3B] ml-5 h-[37px] text-white rounded-[8px] w-[76px] ">
+            <button
+              onClick={handleSearchBook}
+              className="bg-[#35BF3B] ml-5 h-[37px] text-white rounded-[8px] w-[76px] "
+            >
               ค้นหา
             </button>
           </div>
@@ -158,13 +181,18 @@ const Borrow = (props: Props) => {
                   className="flex items-center mt-3 justify-around"
                 >
                   <div className="w-[131px]">
-                    <input
-                      className="ml-[20px]"
-                      type="checkbox"
-                      name=""
-                      id=""
-                      onClick={() => handleBookSelect(item)}
-                    />
+                    <div className="w-[131px]">
+                      <input
+                        className="ml-[20px]"
+                        type="checkbox"
+                        name=""
+                        id=""
+                        checked={listBook.some(
+                          (book) => book.name === item.name
+                        )} // เปลี่ยนเป็นการใช้ some และเปรียบเทียบแบบเจาะจง
+                        onChange={() => handleBookSelect(item)}
+                      />
+                    </div>
                   </div>
                   <p className="w-[131px]">{item._id.slice(0, 12)}</p>
                   <p className="w-[131px]">{item.name}</p>

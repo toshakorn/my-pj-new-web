@@ -47,11 +47,15 @@ const AddMember = (props: Props) => {
                 Swal.fire({
                   position: 'top-end',
                   icon: 'success',
-                  title: 'Your work has been saved',
+                  title: 'เพิ่มสมาชิกสำเร็จ',
                   showConfirmButton: false,
                   timer: 1500,
                 });
+                setTimeout(function () {
+                  window.location.href = "/listmember";
+                }, 1500);
                 console.log("เพิ่มสมาชิกสำเร็จ");
+
               } else {
                 console.error("การเพิ่มสมาชิกล้มเหลว");
               }

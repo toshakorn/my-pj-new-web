@@ -47,6 +47,9 @@ const Return = (props: Props) => {
           title: "สำเร็จ",
           text: "บันทึกข้อมูลเสร็จสิ้น",
         });
+        setTimeout(function () {
+          window.location.href = "/borrow";
+        }, 1500);
         // ทำอะไรก็ตามที่คุณต้องการหลังจาก POST สำเร็จ
       })
       .catch((error) => {
@@ -56,6 +59,7 @@ const Return = (props: Props) => {
           title: "เกิดข้อผิดพลาดในการ ยืม",
           text: "ไม่สามารถส่งข้อมูลไปยังเซิร์ฟเวอร์ได้",
         });
+
         // ทำอะไรก็ตามที่คุณต้องการหลังจากเกิดข้อผิดพลาดในการ POST
       });
   };
@@ -107,7 +111,7 @@ const Return = (props: Props) => {
             <p>ตรวจสอบจาก รหัสบัตรประชาชน</p>
             <div className="flex">
               <input
-                type="text"
+                type="number"
                 className="border-2 border-black text-[18px] w-[260px]"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
@@ -122,7 +126,7 @@ const Return = (props: Props) => {
           </div>
           <div className="w-[850px] h-[580px] mt-[45px] bg-white border-2 border-black">
             <div className="flex justify-center">
-              <div className="w-[750px] h-[300px] border-2 border-black mt-[40px]">
+              <div className="w-[750px] h-[300px] border-2 border-black mt-[40px] overflow-auto">
                 {listBook.map((book: any, index: number) => (
                   <div key={index}>
                     <div className="flex justify-around">
@@ -131,13 +135,14 @@ const Return = (props: Props) => {
                       <p className="w-[150px]">
                         {book.name.slice(0, 24) + "..."}
                       </p>
+                      <p className="w-[150px]">{book.price}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
             <div className="ml-[50px] mt-[25px] flex items-center">
-              <div>
+              <div >
                 {searchResults && (
                   <div>
                     <span>

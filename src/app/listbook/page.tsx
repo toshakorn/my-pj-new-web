@@ -48,13 +48,12 @@ const ListBook = (props: Props) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    
-    // ใช้ parseInt() เพื่อแปลงค่าเป็น number
-    setEditBook({
-      ...editBook,
-      [name]: name === 'price' ? parseInt(value, 10) : value,
-    });
+    setNewBook((prevBook) => ({
+      ...prevBook,
+      [name]: value,
+    }));
   };
+  
   
 
   const handleDeleteBook = (bookId: string) => {
@@ -187,7 +186,7 @@ const ListBook = (props: Props) => {
             />
           </div>
           <div>
-            <p>รูปหนังสือ</p>
+            <p>URL รูปหนังสือ</p>
             <input
               className="border-2 border-black"
               type="text"
