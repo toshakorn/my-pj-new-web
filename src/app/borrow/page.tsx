@@ -71,7 +71,7 @@ const Borrow = (props: Props) => {
 
     // ทำการ POST ข้อมูลไปที่ URL http://localhost:8081/borrow
     axios
-      .post("http://localhost:8081/borrow", data)
+      .post(process.env.NEXT_PUBLIC_API_KEY+"/borrow", data)
       .then((response) => {
         console.log("POST สำเร็จ", response);
         Swal.fire({
@@ -104,7 +104,7 @@ const Borrow = (props: Props) => {
   };
   const handleSearch = async () => {
     try {
-      const response = await fetch(`http://localhost:8081/user/${searchText}`);
+      const response = await fetch(process.env.NEXT_PUBLIC_API_KEY+`/user/${searchText}`);
       if (response.ok) {
         const data = await response.json();
         setSearchResults(data); // อัปเดตผลลัพธ์การค้นหา
@@ -116,8 +116,9 @@ const Borrow = (props: Props) => {
   };
   const fleshData = () => {
     axios
-      .get("http://localhost:8081/book")
+      .get(process.env.NEXT_PUBLIC_API_KEY+"/book")
       .then((response) => {
+        console.log(process.env.NEXT_PUBLIC_API_KEY)
         // สั่ง setBooks เพื่อเซ็ตข้อมูลหนังสือ
         setBooks(response.data);
       })

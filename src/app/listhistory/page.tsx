@@ -16,7 +16,7 @@ const ListMember = (props: Props) => {
 
   const fetchData = () => {
     axios
-      .get("http://localhost:8081/return")
+      .get(process.env.NEXT_PUBLIC_API_KEY+"/return")
       .then((response) => {
         // สั่ง setBooks เพื่อเซ็ตข้อมูลหนังสือ
         setUserData(response.data);

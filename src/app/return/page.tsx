@@ -18,7 +18,7 @@ const Return = (props: Props) => {
   const handleSearch = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8081/borrow/${searchText}`
+        process.env.NEXT_PUBLIC_API_KEY+`/borrow/${searchText}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -48,7 +48,7 @@ const Return = (props: Props) => {
     // ทำการ POST ข้อมูลไปที่ URL http://localhost:8081/borrow
     if (data.name != null || data.name != undefined) {
       axios
-        .post("http://localhost:8081/return", data)
+        .post(process.env.NEXT_PUBLIC_API_KEY+"/return", data)
         .then((response) => {
           console.log("POST สำเร็จ", response);
           Swal.fire({

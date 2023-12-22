@@ -13,7 +13,7 @@ const ListReturn = (props: Props) => {
   }, []);
   const fetchData = () => {
     axios
-      .get("http://localhost:8081/borrow")
+      .get(process.env.NEXT_PUBLIC_API_KEY+"/borrow")
       .then((response) => {
         // สั่ง setBooks เพื่อเซ็ตข้อมูลหนังสือ
         setUserData(response.data);

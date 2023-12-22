@@ -41,7 +41,7 @@ const ListMember = (props: Props) => {
       };
       console.log(editedData);
       axios
-        .put(`http://localhost:8081/user/${editMemberData._id}`, editedData)
+        .put(process.env.NEXT_PUBLIC_API_KEY+`/user/${editMemberData._id}`, editedData)
         .then(() => {
           Swal.fire("แก้ไขสมาชิกสำเร็จ", "", "success");
           fetchData();
@@ -74,7 +74,7 @@ const ListMember = (props: Props) => {
       if (result.isConfirmed) {
         const userId = userData[index]._id;
         axios
-          .delete(`http://localhost:8081/user/${userId}`)
+          .delete(process.env.NEXT_PUBLIC_API_KEY+`/user/${userId}`)
           .then(() => {
             Swal.fire("ลบสมาชิกสำเร็จ", "", "success");
             fetchData();
@@ -89,7 +89,7 @@ const ListMember = (props: Props) => {
 
   const fetchData = () => {
     axios
-      .get("http://localhost:8081/user")
+      .get(process.env.NEXT_PUBLIC_API_KEY+"/user")
       .then((response) => {
         // สั่ง setBooks เพื่อเซ็ตข้อมูลหนังสือ
         setUserData(response.data);

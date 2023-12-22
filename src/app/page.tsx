@@ -21,7 +21,7 @@ export default function Home() {
       password: credentials.password,
     };
     try {
-      const response = await fetch("http://localhost:8081/owner/login", {
+      const response = await fetch(process.env.NEXT_PUBLIC_API_KEY+"/owner/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

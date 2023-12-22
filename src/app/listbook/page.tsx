@@ -35,7 +35,7 @@ const ListBook = (props: Props) => {
 
   const handleEdit = () => {
     axios
-      .put(`http://localhost:8081/book/${editBook._id}`, editBook)
+      .put(process.env.NEXT_PUBLIC_API_KEY+`/book/${editBook._id}`, editBook)
       .then((response) => {
         setIsEditModalOpen(false);
         // หลังจากแก้ไขสำเร็จ ควรเรียกใช้ fleshData() เพื่ออัปเดตรายการหนังสือ
@@ -69,7 +69,7 @@ const ListBook = (props: Props) => {
       if (result.isConfirmed) {
         // หากผู้ใช้คลิก "ลบ"
         axios
-          .delete(`http://localhost:8081/book/${bookId}`)
+          .delete(process.env.NEXT_PUBLIC_API_KEY+`/book/${bookId}`)
           .then((response) => {
             // หากลบสำเร็จ อัปเดตรายการหนังสือ
             // setBooks(response.data);
@@ -89,7 +89,7 @@ const ListBook = (props: Props) => {
   const handleOk = () => {
     // ทำ POST request เพื่อสร้างหนังสือใหม่
     axios
-      .post("http://localhost:8081/book", newBook)
+      .post(process.env.DB_API_TEST+"/book", newBook)
       .then((response) => {
         // สั่ง setBooks เพื่ออัปเดตรายการหนังสือ
         fleshData();
@@ -112,7 +112,7 @@ const ListBook = (props: Props) => {
 
   const fleshData = () => {
     axios
-      .get("http://localhost:8081/book")
+      .get(process.env.NEXT_PUBLIC_API_KEY+"/book")
       .then((response) => {
         // สั่ง setBooks เพื่อเซ็ตข้อมูลหนังสือ
         setBooks(response.data);

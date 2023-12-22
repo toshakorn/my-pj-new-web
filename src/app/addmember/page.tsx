@@ -15,7 +15,7 @@ const AddMember = (props: Props) => {
     };
   
     // ทำการตรวจสอบว่ามีผู้ใช้นี้อยู่ในฐานข้อมูลหรือไม่
-    fetch("http://localhost:8081/user", {
+    fetch(process.env.NEXT_PUBLIC_API_KEY+"/user", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +35,7 @@ const AddMember = (props: Props) => {
         } else {
           // ถ้ายังไม่มีผู้ใช้นี้ในฐานข้อมูล
           // ทำการ POST ข้อมูลใหม่
-          fetch("http://localhost:8081/user", {
+          fetch(process.env.NEXT_PUBLIC_API_KEY+"/user", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
