@@ -4,7 +4,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-
+import QRCode from "qrcode";
+import Image from "next/image";
 type Props = {};
 type Book = {
   // กำหนดรูปแบบข้อมูลหนังสือ
@@ -35,11 +36,21 @@ const Borrow = (props: Props) => {
   const [searchTextBook, setSearchTextBook] = useState("");
   const [searchResults, setSearchResults] = useState<any>([]);
   const [days, setDays] = useState(0);
-
+  const promptpayNumber = "0913700031";
+  const amount = "0.1";
+  const [qrModal, setQrModal] = useState(false);
   useEffect(() => {
     // ใช้ Axios ในการดึงข้อมูลจาก API
     fleshData();
   }, []);
+
+  const genQr = async () => {
+    setQrModal(true);
+    setAddBorrow(false);
+  };
+  const cancelGenQr = async () => {
+    setQrModal(false);
+  };
 
   const onSubmit = () => {
     const currentDate = new Date();
@@ -225,6 +236,7 @@ const Borrow = (props: Props) => {
           <div className="flex justify-center">
             <button
               onClick={() => showEditModal(listBook)}
+              // onClick={genQr}
               className="w-[250px] h-[45px] bg-[#35BF3B] mt-4 rounded-[10px] text-white text-[25px]"
             >
               ยืนยัน
@@ -233,10 +245,28 @@ const Borrow = (props: Props) => {
         </div>
       </div>
       <Modal
+        title="QrCode"
+        visible={qrModal}
+        onCancel={cancelGenQr}
+        onOk={onSubmit}
+        okButtonProps={{
+          className: "bg-pink-500 hover:bg-pink-700 text-white",
+        }}
+      >
+        <div>
+          <img
+            src={`https://promptpay.io/0611012709/${listBook.length * 5}.png`}
+            alt="QR Code"
+          />
+        </div>
+      </Modal>
+
+      <Modal
         title="ยืมหนังสือ"
         visible={Boolean(addBorrow)}
-        // onOk={}
+        onOk={genQr}
         onCancel={() => setAddBorrow(false)}
+        okButtonProps={{ className: 'bg-pink-500 hover:bg-pink-700 text-white' }}
       >
         <div className="w-full h-[250px] bg-white overflow-auto">
           <div className="flex">
@@ -282,12 +312,12 @@ const Borrow = (props: Props) => {
             ))}
           </div>
           <div className="flex justify-center mt-4">
-            <button
-              onClick={onSubmit}
+            {/* <button
+              onClick={genQr}
               className="text-white w-[220px] h-[35px] bg-[#35BF3B] text-[25px] flex items-center justify-center ml-[8px] border-2 border-black"
             >
               ยืนยัน
-            </button>
+            </button> */}
           </div>
         </div>
       </Modal>

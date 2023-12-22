@@ -138,6 +138,8 @@ const ListMember = (props: Props) => {
           visible={editModalVisible}
           onOk={handleEditSubmit}
           onCancel={handleEditCancel}
+          okButtonProps={{ className: 'bg-pink-500 hover:bg-pink-700 text-white' }}
+
         >
           <div>
             <p>ชื่อหนังสือ</p>

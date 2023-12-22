@@ -211,6 +211,7 @@ const ListBook = (props: Props) => {
           visible={Boolean(isEditModalOpen)}
           onOk={handleEdit}
           onCancel={() => setIsEditModalOpen(false)}
+          okButtonProps={{ className: 'bg-pink-500 hover:bg-pink-700 text-white' }}
         >
           <div>
             <p>ชื่อหนังสือ</p>

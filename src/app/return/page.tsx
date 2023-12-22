@@ -1,4 +1,5 @@
 "use client";
+import { Modal } from "antd";
 import axios from "axios";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
@@ -13,6 +14,7 @@ const Return = (props: Props) => {
   const [value, setValue] = useState<any>([]);
   const [value2, setValue2] = useState<any>([]);
   const [textareaValue, setTextareaValue] = useState<any>([]);
+  const [qrModal, setQrModal] = useState(false);
   const handleSearch = async () => {
     try {
       const response = await fetch(
@@ -28,6 +30,12 @@ const Return = (props: Props) => {
       console.error("เกิดข้อผิดพลาดในการค้นหาผู้ใช้", error);
     }
   };
+  const genQr = async () => {
+    setQrModal(true);
+  };
+  const cancelGenQr = async () => {
+    setQrModal(false);
+  };
   const submitPost = () => {
     const data = {
       name: searchResults.name,
@@ -38,30 +46,32 @@ const Return = (props: Props) => {
     };
     // console.log(data)
     // ทำการ POST ข้อมูลไปที่ URL http://localhost:8081/borrow
-    axios
-      .post("http://localhost:8081/return", data)
-      .then((response) => {
-        console.log("POST สำเร็จ", response);
-        Swal.fire({
-          icon: "success",
-          title: "สำเร็จ",
-          text: "บันทึกข้อมูลเสร็จสิ้น",
-        });
-        setTimeout(function () {
-          window.location.href = "/borrow";
-        }, 1500);
-        // ทำอะไรก็ตามที่คุณต้องการหลังจาก POST สำเร็จ
-      })
-      .catch((error) => {
-        console.error("เกิดข้อผิดพลาดในการ ยืม", error);
-        Swal.fire({
-          icon: "error",
-          title: "เกิดข้อผิดพลาดในการ ยืม",
-          text: "ไม่สามารถส่งข้อมูลไปยังเซิร์ฟเวอร์ได้",
-        });
+    if (data.name != null || data.name != undefined) {
+      axios
+        .post("http://localhost:8081/return", data)
+        .then((response) => {
+          console.log("POST สำเร็จ", response);
+          Swal.fire({
+            icon: "success",
+            title: "สำเร็จ",
+            text: "บันทึกข้อมูลเสร็จสิ้น",
+          });
+          setTimeout(function () {
+            window.location.href = "/borrow";
+          }, 1500);
+          // ทำอะไรก็ตามที่คุณต้องการหลังจาก POST สำเร็จ
+        })
+        .catch((error) => {
+          console.error("เกิดข้อผิดพลาดในการ ยืม", error);
+          Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาดในการ ยืม",
+            text: "ไม่สามารถส่งข้อมูลไปยังเซิร์ฟเวอร์ได้",
+          });
 
-        // ทำอะไรก็ตามที่คุณต้องการหลังจากเกิดข้อผิดพลาดในการ POST
-      });
+          // ทำอะไรก็ตามที่คุณต้องการหลังจากเกิดข้อผิดพลาดในการ POST
+        });
+    }
   };
   const dateF = () => {
     let day = searchResults.day;
@@ -142,7 +152,7 @@ const Return = (props: Props) => {
               </div>
             </div>
             <div className="ml-[50px] mt-[25px] flex items-center">
-              <div >
+              <div>
                 {searchResults && (
                   <div>
                     <span>
@@ -178,16 +188,40 @@ const Return = (props: Props) => {
                   <p className="text-[25px]">รวม {value} บาท</p>
                 </div>
               </div>
-              <button
-                onClick={submitPost}
-                className="w-[350px] h-[45px] text-white text-[20px] rounded-full border-2 ml-[90px] border-black bg-[#35BF3B]"
-              >
-                ยืนยันการคือหนังสือ
-              </button>
+              <div>
+                <button
+                  onClick={submitPost}
+                  className="w-[350px] h-[45px] text-white text-[20px] rounded-full border-2 ml-[90px] border-black bg-[#35BF3B]"
+                >
+                  ยืนยันการคือหนังสือ
+                </button>
+                <button
+                  onClick={genQr}
+                  className="w-[350px] h-[45px] text-white text-[20px] rounded-full border-2 ml-[90px] border-black bg-[#35BF3B]"
+                >
+                  QrCode
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <Modal
+        title="QrCode"
+        visible={qrModal}
+        onCancel={cancelGenQr}
+        onOk={cancelGenQr}
+        okButtonProps={{
+          className: "bg-pink-500 hover:bg-pink-700 text-white",
+        }}
+      >
+        <div>
+          <img
+            src={`https://promptpay.io/0611012709/${value}.png`}
+            alt="QR Code"
+          />
+        </div>
+      </Modal>
     </div>
   );
 };
